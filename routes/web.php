@@ -74,6 +74,8 @@ Route::post('/cart/add/{id}', [CartController::class, 'addToCart'])->name('cart.
 Route::delete('/cart/remove/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
 
 Route::post('/checkout', [OrderController::class, 'checkout'])->name('checkout.process');
+Route::get('/checkout/success', [OrderController::class, 'checkoutSuccess'])->name('checkout.success');
+Route::get('/checkout/cancel', [OrderController::class, 'checkoutCancel'])->name('checkout.cancel');
 
 
 Route::get('/order/success', [OrderController::class, 'success'])->name('order.success');

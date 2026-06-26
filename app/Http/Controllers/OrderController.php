@@ -14,63 +14,94 @@ use Illuminate\Support\Facades\DB;
 class OrderController extends Controller
 {
     public function checkout()
-{
+    {
+        $cartItems = CartItem::where('user_id', Auth::id())->with('product')->get();
 
-    $cartItems = CartItem::where('user_id', Auth::id())->with('product')->get();
-
-    if ($cartItems->isEmpty()) {
-        return redirect()->back()->with('error', 'Your cart is empty!');
-    }
-
-
-    DB::transaction(function () use ($cartItems) {
-
-
-        $ordersByDesigner = $cartItems->groupBy(function ($item) {
-            return $item->product->user_id;
-        });
-
-
-        foreach ($ordersByDesigner as $designerId => $items) {
-
-
-
-            $subtotal = $items->sum(function($item) {
-                return $item->product->price * $item->quantity;
-            });
-
-
-            $total = $subtotal;
-
-            
-            $order = Order::create([
-                'user_id' => Auth::id(),
-                'total_amount' => $total,
-                'status' => 'pending',
-                'payment_method' => 'cod'
-            ]);
-
-
-            foreach ($items as $item) {
-                OrderItem::create([
-                    'order_id' => $order->id,
-                    'product_id' => $item->product_id,
-                    'quantity' => $item->quantity,
-                    'price' => $item->product->price
-                ]);
-
-
-                $product = Product::find($item->product_id);
-                $product->decrement('stock_quantity', $item->quantity);
-            }
+        if ($cartItems->isEmpty()) {
+            return redirect()->back()->with('error', 'Your cart is empty!');
         }
 
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
 
-        CartItem::where('user_id', Auth::id())->delete();
-    });
+        $lineItems = [];
+        foreach ($cartItems as $item) {
+            $lineItems[] = [
+                'price_data' => [
+                    'currency' => 'lkr',
+                    'product_data' => [
+                        'name' => $item->product->name,
+                    ],
+                    'unit_amount' => (int)($item->product->price * 100), // Stripe expects amounts in cents
+                ],
+                'quantity' => $item->quantity,
+            ];
+        }
 
-    return redirect()->route('order.success');
-}
+        try {
+            $checkout_session = \Stripe\Checkout\Session::create([
+                'payment_method_types' => ['card'],
+                'line_items' => $lineItems,
+                'mode' => 'payment',
+                'success_url' => route('checkout.success'),
+                'cancel_url' => route('checkout.cancel'),
+            ]);
+
+            return redirect($checkout_session->url);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error creating payment session: ' . $e->getMessage());
+        }
+    }
+
+    public function checkoutSuccess()
+    {
+        $cartItems = CartItem::where('user_id', Auth::id())->with('product')->get();
+
+        if ($cartItems->isEmpty()) {
+            return redirect()->route('dashboard')->with('error', 'No active session or cart is empty.');
+        }
+
+        DB::transaction(function () use ($cartItems) {
+            $ordersByDesigner = $cartItems->groupBy(function ($item) {
+                return $item->product->user_id;
+            });
+
+            foreach ($ordersByDesigner as $designerId => $items) {
+                $subtotal = $items->sum(function($item) {
+                    return $item->product->price * $item->quantity;
+                });
+
+                $total = $subtotal;
+
+                $order = Order::create([
+                    'user_id' => Auth::id(),
+                    'total_amount' => $total,
+                    'status' => 'pending',
+                    'payment_method' => 'stripe'
+                ]);
+
+                foreach ($items as $item) {
+                    OrderItem::create([
+                        'order_id' => $order->id,
+                        'product_id' => $item->product_id,
+                        'quantity' => $item->quantity,
+                        'price' => $item->product->price
+                    ]);
+
+                    $product = Product::find($item->product_id);
+                    $product->decrement('stock_quantity', $item->quantity);
+                }
+            }
+
+            CartItem::where('user_id', Auth::id())->delete();
+        });
+
+        return redirect()->route('order.success')->with('success', 'Payment successful and order placed!');
+    }
+
+    public function checkoutCancel()
+    {
+        return redirect()->route('cart.index')->with('error', 'Payment was cancelled.');
+    }
     public function success()
     {
         return view('orders.success');
