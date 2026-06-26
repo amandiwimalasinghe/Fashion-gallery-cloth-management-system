@@ -66,12 +66,13 @@
                                     </label>
                                     <div class="relative">
                                         <input type="file" name="file" id="file" accept="image/*" required class="hidden">
-                                        <label for="file" class="flex items-center justify-center gap-3 w-full py-8 px-4 border-2 border-dashed border-gray-200 rounded-xl cursor-pointer hover:border-[#d4af37] hover:bg-[#d4af37]/5 transition-all duration-300 group">
-                                            <div class="text-center">
+                                        <label for="file" class="flex items-center justify-center gap-3 w-full h-48 border-2 border-dashed border-gray-200 rounded-xl cursor-pointer hover:border-[#d4af37] hover:bg-[#d4af37]/5 transition-all duration-300 group overflow-hidden relative">
+                                            <div id="file-placeholder" class="text-center">
                                                 <i class="fas fa-cloud-upload-alt text-3xl text-gray-300 group-hover:text-[#d4af37] transition-colors mb-2"></i>
                                                 <p id="file-label" class="text-sm text-gray-500 group-hover:text-gray-700">Click to choose an image</p>
                                                 <p id="file-name" class="text-xs text-gray-400 mt-1"></p>
                                             </div>
+                                            <img id="file-preview" class="absolute inset-0 w-full h-full object-contain hidden bg-gray-50 z-0" src="">
                                         </label>
                                     </div>
                                 </div>
@@ -253,6 +254,8 @@
         const fileInput = document.getElementById('file');
         const fileLabel = document.getElementById('file-label');
         const fileName = document.getElementById('file-name');
+        const filePlaceholder = document.getElementById('file-placeholder');
+        const filePreview = document.getElementById('file-preview');
         const uploadForm = document.getElementById('uploadForm');
         const submitBtn = document.getElementById('submitBtn');
         const endBtn = document.getElementById('endBtn');
@@ -277,11 +280,28 @@
         };
 
         // File input change handler
+        function updateFilePreview(file) {
+            fileLabel.textContent = file.name;
+            fileName.textContent = `Size: ${formatFileSize(file.size)}`;
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                filePreview.src = e.target.result;
+                filePreview.classList.remove('hidden');
+                filePlaceholder.classList.add('hidden'); // Hide the placeholder text/icon
+            };
+            reader.readAsDataURL(file);
+        }
+
         fileInput.addEventListener('change', (e) => {
             if (e.target.files.length > 0) {
-                const file = e.target.files[0];
-                fileLabel.textContent = file.name;
-                fileName.textContent = `Size: ${formatFileSize(file.size)}`;
+                updateFilePreview(e.target.files[0]);
+            } else {
+                filePreview.src = '';
+                filePreview.classList.add('hidden');
+                filePlaceholder.classList.remove('hidden');
+                fileLabel.textContent = 'Click to choose an image';
+                fileName.textContent = '';
             }
         });
 
@@ -448,6 +468,30 @@
         });
 
         // Initialize on DOM ready
-        document.addEventListener('DOMContentLoaded', initControls);
+        document.addEventListener('DOMContentLoaded', () => {
+            initControls();
+            
+            @if(isset($product) && $product->image)
+            const imageUrl = '{{ asset("storage/" . $product->image) }}';
+            
+            fetch(imageUrl)
+                .then(res => res.blob())
+                .then(blob => {
+                    const fileNameStr = imageUrl.split('/').pop() || 'garment.jpg';
+                    const file = new File([blob], fileNameStr, { type: blob.type });
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    fileInput.files = dataTransfer.files;
+                    
+                    updateFilePreview(file);
+                    
+                    showFlash('Image loaded automatically. Please select the Garment Type and click Start.', 'info');
+                })
+                .catch(err => {
+                    console.error('Error fetching image:', err);
+                    showFlash('Failed to auto-load garment image.', 'error');
+                });
+            @endif
+        });
     </script>
 </x-app-layout>

@@ -17,7 +17,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('/dashboard', function (Request $request) {
-    $query = Product::with('user')->latest();
+    $query = Product::with('user');
 
 
     if ($request->has('category') && $request->category != '') {
@@ -41,7 +41,11 @@ Route::get('/dashboard', function (Request $request) {
             $query->orderBy('price', 'asc');
         } elseif ($request->sort == 'price_high') {
             $query->orderBy('price', 'desc');
+        } elseif ($request->sort == 'newest') {
+            $query->latest();
         }
+    } else {
+        $query->latest();
     }
 
     $products = $query->paginate(12)->withQueryString();

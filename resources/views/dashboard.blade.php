@@ -144,7 +144,7 @@
                                 </span>
 
                                 <!-- Quick Add Overlay -->
-                                <div class="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-black/90 via-black/50 to-transparent translate-y-full group-hover:translate-y-0 transition-all duration-500 flex flex-col justify-end">
+                                <div class="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-black/90 via-black/50 to-transparent translate-y-full group-hover:translate-y-0 transition-all duration-500 flex flex-col justify-end gap-2">
                                     @if($product->stock_quantity > 0)
                                     <form action="{{ route('cart.add', $product->id) }}" method="POST" class="w-full">
                                         @csrf
@@ -158,6 +158,11 @@
                                             <i class="fas fa-times-circle mr-2"></i>Sold Out
                                         </button>
                                     @endif
+                                    
+                                    <a href="{{ route('TryOn', ['product_id' => $product->id]) }}" class="w-full bg-white/20 backdrop-blur-md border border-white/50 text-white py-3.5 rounded-xl font-bold text-sm uppercase tracking-wider hover:bg-white hover:text-[#1a1a1a] transition-all duration-300 shadow-xl flex items-center justify-center gap-2 transform hover:scale-[1.02]">
+                                        <i class="fas fa-magic"></i>
+                                        <span>Try On</span>
+                                    </a>
                                 </div>
 
                                 <!-- Wishlist Button -->
