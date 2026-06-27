@@ -555,4 +555,27 @@
 
     {{-- Main Script --}}
     <script src="{{ asset('js/customizer.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            @if(isset($product) && $product->image)
+            const imageUrl = '{{ asset("storage/" . $product->image) }}';
+            const uploadClothInput = document.getElementById('uploadCloth');
+            
+            fetch(imageUrl)
+                .then(res => res.blob())
+                .then(blob => {
+                    const fileNameStr = imageUrl.split('/').pop() || 'garment.jpg';
+                    const file = new File([blob], fileNameStr, { type: blob.type });
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    uploadClothInput.files = dataTransfer.files;
+                    
+                    uploadClothInput.dispatchEvent(new Event('change'));
+                })
+                .catch(err => {
+                    console.error('Error fetching image:', err);
+                });
+            @endif
+        });
+    </script>
 </x-app-layout>

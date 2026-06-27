@@ -42,9 +42,13 @@ class DesignerController extends Controller
 
 
 
-        public function index()
+        public function index(Request $request)
         {
-             return view('customizer.customizer');
+            $product = null;
+            if ($request->has('product_id')) {
+                $product = \App\Models\Product::find($request->product_id);
+            }
+            return view('customizer.customizer', compact('product'));
         }
 
         public function saveDesign(Request $request)

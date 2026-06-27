@@ -159,10 +159,16 @@
                                         </button>
                                     @endif
                                     
-                                    <a href="{{ route('TryOn', ['product_id' => $product->id]) }}" class="w-full bg-white/20 backdrop-blur-md border border-white/50 text-white py-3.5 rounded-xl font-bold text-sm uppercase tracking-wider hover:bg-white hover:text-[#1a1a1a] transition-all duration-300 shadow-xl flex items-center justify-center gap-2 transform hover:scale-[1.02]">
-                                        <i class="fas fa-magic"></i>
-                                        <span>Try On</span>
-                                    </a>
+                                    <div class="flex gap-2">
+                                        <a href="{{ route('TryOn', ['product_id' => $product->id]) }}" class="flex-1 bg-white/20 backdrop-blur-md border border-white/50 text-white py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-white hover:text-[#1a1a1a] transition-all duration-300 shadow-xl flex items-center justify-center gap-1.5 transform hover:scale-[1.02]">
+                                            <i class="fas fa-magic"></i>
+                                            <span>Try On</span>
+                                        </a>
+                                        <a href="{{ route('customizer.index', ['product_id' => $product->id]) }}" class="flex-1 bg-white/20 backdrop-blur-md border border-white/50 text-white py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-white hover:text-[#1a1a1a] transition-all duration-300 shadow-xl flex items-center justify-center gap-1.5 transform hover:scale-[1.02]">
+                                            <i class="fas fa-paint-brush"></i>
+                                            <span>Customize</span>
+                                        </a>
+                                    </div>
                                 </div>
 
                                 <!-- Wishlist Button -->
