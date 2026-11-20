@@ -2,13 +2,50 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
-   public function index()
+    public function dashboard()
+    {
+        $totalUsers = User::count();
+        $totalOrders = Order::count();
+        return view('admin.dashboard', compact('totalUsers', 'totalOrders'));
+    }
+
+    public function orders(Request $request)
+    {
+        $query = Order::with(['user', 'items.product.user'])->latest();
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $orders = $query->paginate(10)->withQueryString();
+        $totalOrders = Order::count();
+        $pendingOrders = Order::where('status', 'pending')->count();
+        $completedOrders = Order::where('status', 'completed')->count();
+        $totalRevenue = Order::where('status', '!=', 'cancelled')->sum('total_amount');
+
+        return view('admin.orders.index', compact(
+            'orders',
+            'totalOrders',
+            'pendingOrders',
+            'completedOrders',
+            'totalRevenue'
+        ));
+    }
+
+    public function showOrder($id)
+    {
+        $order = Order::with(['user', 'items.product.user'])->findOrFail($id);
+        return view('admin.orders.show', compact('order'));
+    }
+
+    public function index()
     {
         $users = User::latest()->paginate(10);
         return view('admin.users.index', compact('users'));

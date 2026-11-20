@@ -101,7 +101,10 @@ Route::get('/designer/reviews', [ReviewController::class, 'designerReviews'])->n
 Route::get('/designer/{id}', [DesignerController::class, 'show'])->name('designer.show');
 
 
+Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 Route::get('/admin/users', [AdminController::class, 'index'])->name('admin.users');
+Route::get('/admin/orders', [AdminController::class, 'orders'])->name('admin.orders');
+Route::get('/admin/orders/{id}', [AdminController::class, 'showOrder'])->name('admin.orders.show');
 
 
 Route::get('/admin/users/{id}/edit', [AdminController::class, 'edit'])->name('admin.users.edit');
