@@ -103,6 +103,7 @@ Route::get('/designer/{id}', [DesignerController::class, 'show'])->name('designe
 
 
 Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+Route::get('/admin/dashboard', [AdminController::class, 'overview'])->name('admin.overview');
 Route::get('/admin/users', [AdminController::class, 'index'])->name('admin.users');
 Route::get('/admin/orders', [AdminController::class, 'orders'])->name('admin.orders');
 Route::get('/admin/orders/{id}', [AdminController::class, 'showOrder'])->name('admin.orders.show');

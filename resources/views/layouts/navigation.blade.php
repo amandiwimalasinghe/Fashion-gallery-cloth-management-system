@@ -44,10 +44,10 @@
                     </x-nav-link>
 
                     @if(Auth::user()->role === 'admin')
-                        <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard') || request()->routeIs('admin.users*') || request()->routeIs('admin.orders*') || request()->routeIs('admin.reports*')"
+                        <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard') || request()->routeIs('admin.overview') || request()->routeIs('admin.users*') || request()->routeIs('admin.orders*') || request()->routeIs('admin.reports*')"
                             class="group flex items-center gap-2 px-4 py-2 rounded-full text-gray-600 hover:text-gray-900 hover:bg-gray-100/80 transition-all duration-300"
                             style="font-family: 'Poppins', sans-serif; font-weight: 500; font-size: 0.9rem;">
-                            <i class="fas fa-user-shield {{ request()->routeIs('admin.dashboard') || request()->routeIs('admin.users*') || request()->routeIs('admin.orders*') || request()->routeIs('admin.reports*') ? 'text-[#d4af37]' : 'text-gray-400 group-hover:text-[#d4af37]' }} transition duration-300"></i>
+                            <i class="fas fa-user-shield {{ request()->routeIs('admin.dashboard') || request()->routeIs('admin.overview') || request()->routeIs('admin.users*') || request()->routeIs('admin.orders*') || request()->routeIs('admin.reports*') ? 'text-[#d4af37]' : 'text-gray-400 group-hover:text-[#d4af37]' }} transition duration-300"></i>
                             <span>{{ __('Admin') }}</span>
                         </x-nav-link>
                     @endif
@@ -171,7 +171,7 @@
 
             @if(Auth::user()->role === 'admin')
                 <x-responsive-nav-link :href="route('admin.dashboard')"
-                    :active="request()->routeIs('admin.dashboard') || request()->routeIs('admin.users*') || request()->routeIs('admin.orders*') || request()->routeIs('admin.reports*')"
+                    :active="request()->routeIs('admin.dashboard') || request()->routeIs('admin.overview') || request()->routeIs('admin.users*') || request()->routeIs('admin.orders*') || request()->routeIs('admin.reports*')"
                     class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-50 transition">
                     <i class="fas fa-user-shield text-[#d4af37]"></i>
                     {{ __('Admin') }}

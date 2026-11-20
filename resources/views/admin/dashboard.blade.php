@@ -18,6 +18,38 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
+                <!-- Admin Dashboard Card -->
+                <div
+                    class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col justify-between hover:shadow-lg transition-all duration-300">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <div
+                                class="w-14 h-14 bg-gradient-to-br from-[#1a1a1a] to-[#333] rounded-xl flex items-center justify-center shadow-md">
+                                <i class="fas fa-tachometer-alt text-[#d4af37] text-xl"></i>
+                            </div>
+                            <span
+                                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                                <i class="fas fa-chart-pie text-[#d4af37]"></i>
+                                Overview
+                            </span>
+                        </div>
+
+                        <h3 class="text-xl font-bold text-gray-900 mb-2" style="font-family: 'Playfair Display', serif;">
+                            Dashboard
+                        </h3>
+                        <p class="text-sm text-gray-500 mb-6">
+                            View live revenue stats, monthly charts, recent orders, new users, and low-stock alerts at a glance.
+                        </p>
+                    </div>
+
+                    <a href="{{ route('admin.overview') }}"
+                        class="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#1a1a1a] to-[#333] text-white px-6 py-3 rounded-xl font-bold uppercase text-xs tracking-widest hover:from-[#d4af37] hover:to-[#b5952f] transition-all duration-300 shadow-md hover:shadow-[#d4af37]/30">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                        <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+
                 <!-- User Management Card -->
                 <div
                     class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col justify-between hover:shadow-lg transition-all duration-300">
