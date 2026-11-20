@@ -64,11 +64,10 @@
                             </label>
                             <select id="role" name="role"
                                 class="block w-full border-2 border-gray-200 rounded-xl py-3 px-4 focus:border-[#d4af37] focus:ring-[#d4af37] bg-white cursor-pointer">
-                                <option value="user" {{ $user->role == 'user' ? 'selected' : '' }}>👤 User (Customer)
+                                <option value="customer" {{ $user->role == 'customer' ? 'selected' : '' }}>👤 Customer
                                 </option>
                                 <option value="designer" {{ $user->role == 'designer' ? 'selected' : '' }}>🎨 Designer
                                 </option>
-                                <option value="tailor" {{ $user->role == 'tailor' ? 'selected' : '' }}>✂️ Tailor</option>
                                 <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>🛡️ Admin</option>
                             </select>
                         </div>
