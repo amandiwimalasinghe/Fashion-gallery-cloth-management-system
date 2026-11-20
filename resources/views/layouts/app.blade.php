@@ -206,6 +206,88 @@
         .premium-toast i {
             font-size: 1.1rem;
         }
+
+        /* Print Report Styling */
+        .print-only {
+            display: none;
+        }
+
+        @media print {
+            @page {
+                size: A4;
+                margin: 12mm;
+            }
+
+            body {
+                background: #ffffff !important;
+                color: #111827 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            nav,
+            header,
+            footer.footer-premium,
+            .page-loader,
+            .back-to-top,
+            .premium-toast,
+            .no-print,
+            .print\:hidden {
+                display: none !important;
+            }
+
+            .print-only {
+                display: block !important;
+            }
+
+            .min-h-screen {
+                min-height: auto !important;
+                background: #ffffff !important;
+                padding: 0 !important;
+            }
+
+            main.page-content {
+                opacity: 1 !important;
+                transform: none !important;
+                animation: none !important;
+            }
+
+            .report-printable {
+                padding: 0 !important;
+                background: #ffffff !important;
+            }
+
+            .report-printable > div {
+                max-width: 100% !important;
+                padding: 0 !important;
+            }
+
+            .report-printable .shadow-sm,
+            .report-printable .shadow-md,
+            .report-printable .shadow-lg {
+                box-shadow: none !important;
+            }
+
+            .report-printable .overflow-x-auto {
+                overflow: visible !important;
+            }
+
+            .report-printable table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+                font-size: 12px !important;
+            }
+
+            .report-printable thead {
+                display: table-header-group !important;
+            }
+
+            .report-printable tr,
+            .report-printable .print-card {
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+            }
+        }
     </style>
 </head>
 

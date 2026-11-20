@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminReportController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\DesignerController;
 use App\Http\Controllers\InquiryController;
@@ -105,6 +106,14 @@ Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin.dashboa
 Route::get('/admin/users', [AdminController::class, 'index'])->name('admin.users');
 Route::get('/admin/orders', [AdminController::class, 'orders'])->name('admin.orders');
 Route::get('/admin/orders/{id}', [AdminController::class, 'showOrder'])->name('admin.orders.show');
+
+Route::prefix('admin/reports')->name('admin.reports.')->group(function () {
+    Route::get('/sales', [AdminReportController::class, 'sales'])->name('sales');
+    Route::get('/designers', [AdminReportController::class, 'designers'])->name('designers');
+    Route::get('/customers', [AdminReportController::class, 'customers'])->name('customers');
+    Route::get('/reviews', [AdminReportController::class, 'reviews'])->name('reviews');
+    Route::get('/inquiries', [AdminReportController::class, 'inquiries'])->name('inquiries');
+});
 
 
 Route::get('/admin/users/{id}/edit', [AdminController::class, 'edit'])->name('admin.users.edit');
